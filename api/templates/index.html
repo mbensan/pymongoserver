@@ -1,0 +1,214 @@
+{% load staticfiles %}
+<!DOCTYPE html> 
+<html> 
+<head> 
+  <title>Near-U</title> 
+  <meta name="viewport" content="width=device-width, initial-scale=1"> 
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="stylesheet" href="{% static 'lib/jquery_mobile/jquery.mobile-1.2.1.min.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+  <script src="{% static 'js/jquery-1.8.2.min.js' %}"></script>
+  <script src="{% static 'lib/jquery_mobile/jquery.mobile-1.2.1.min.js' %}"></script>
+  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+</head> 
+<body> 
+
+<div data-role="page" id="initial_page">
+
+  <div data-role="header">
+    <h1>Ingresa a Near-U</h1>
+  </div><!-- /header -->
+
+  <div data-role="content"> 
+    <a href="#login_page" data-transition="turn" data-role="button" data-icon="star" data-theme="b">Login</a>
+    <a href="#signup_page" data-transition="turn" data-role="button" data-icon="star" data-theme="b">Signup</a>
+    <a href="#list_page" data-transition="turn" data-role="button" data-icon="star" data-theme="b">Inner Page</a>
+  </div><!-- /content -->
+  <!--<div data-role="footer">
+    <h4>Footer</h4>
+  </div><!--  /footer -->
+
+</div><!-- /page -->
+
+<div data-role="page" id="login_page">
+  <div data-role="header">
+    <h1>Login</h1>
+  </div><!-- /header -->
+
+  <div data-role="content">
+    <form id="form_login" name="form_login" method="post">
+      <label for="email_login">Email:</label>
+      <input type="email" name="email" id="email_login" required/>
+      <label for="password_login">Password:</label>
+      <input type="password" name="password" id="password_login" required/>
+      <input type="hidden" name="app_id" value="12" />
+      <div data-role="controlgroup" data-type="horizontal">
+        <a href="#initial_page" data-transition="turn" data-role="button" data-icon="star" data-theme="c" data-direction="reverse">atras</a>
+        <input type="submit" name="submit" value="Enviar" data-role="button" data-theme="b" data-icon="star"/>
+      </div>
+    </form>
+    <div class="alert alert-error">
+      <a class="close" data-dismiss="alert">&times;</a>
+      <strong>Error</strong> <span class="mensaje"></span>
+    </div>
+  </div><!-- /content -->
+</div>
+
+<div data-role="page" id="signup_page">
+  <div data-role="header">
+    <h1>SignUp</h1>
+  </div><!-- /header -->
+
+  <div data-role="content"> 
+    <form id="form_register" name="form_register" method="post">
+      <label for="nombre_signup">Nombre:</label>
+      <input type="text" name="nombre" id="nombre_signup" required/>
+      <label for="email_signup">Email:</label>
+      <input type="email" name="email" id="email_signup" required/>
+      <label for="password_signup">Password:</label>
+      <input type="password" name="password" id="password_signup" required/>
+      <label for="password_conf_signup">Password Confirmation:</label>
+      <input type="password" name="password_conf" id="password_conf_signup" required/>
+      <input type="hidden" name="app_id" value="12" />
+      <div data-role="controlgroup" data-type="horizontal">
+        <a href="#initial_page" data-transition="turn" data-role="button" data-icon="star" data-theme="c" data-direction="reverse">atras</a>
+        <input type="submit" name="submit" value="Enviar" data-role="button" data-theme="b" data-icon="star"/>
+      </div>
+    </form>
+
+    <div class="alert alert-error">
+      <a class="close" data-dismiss="alert">&times;</a>
+      <strong>Error</strong> <span class="mensaje">Best check yo self, you're not looking too good.</span>
+    </div>
+  </div><!-- /content -->
+</div>
+
+<div data-role="page" id="list_page">
+  <div data-role="header">
+    <h1>Mis Needs</h1>
+  </div><!-- /header -->
+
+  <div data-role="content">
+    <div class="alert alert-success">
+      <a class="close" data-dismiss="alert">&times;</a>
+      <strong>!</strong> <span class="mensaje">Nuevo Need</span>
+    </div>
+
+    <form id="form_add_need" method="post" name="form_add_need">
+      <label for="descripcion_add_need">Descripci&oacute;n:</label>
+      <input type="text" id="descripcion_add_need" name="descripcion" />
+      <label for="tipo_add_need">Tipo:</label>
+      <select id="tipo_add_need" name="tipo">
+        <option value="wish">Wish</option>
+        <option value="do">Do</option>
+        <option value="share">Share</option>
+      </select>
+      <input type="hidden" name="app_id" value="12" />
+      <input type="hidden" name="usuario_email" value="none" />
+      <div data-role="controlgroup" data-type="horizontal">
+        <input type="button" data-role="button" data-icon="star" data-theme="c" value="Esconder" onclick="esconder_form_add_need()"/>
+        <input type="submit" data-role="button" data-icon="star" data-theme="b" value="Enviar"/>
+      </div>
+    </form> 
+    <br />
+    <div class="alert alert-error">
+      <a class="close" data-dismiss="alert">&times;</a>
+      <strong>Error</strong> <span class="mensaje"></span>
+    </div>
+    <ul data-role="listview" id="lista_needs">
+    </ul>
+    <br />  
+    <br />
+    <div data-role="controlgroup" data-type="horizontal">
+      <a href="#" data-role="button" data-icon="star" data-theme="b" id="agregar_need_button" onclick="mostrar_form_add_need()">Nuevo Need</a>
+    </div>
+  </div><!-- /content -->
+  <div data-role="footer" data-position="fixed" data-id="navbar">
+    <div data-role="navbar">
+      <ul>
+        <li><a href="#list_page" data-icon="home">Mis Needs</a></li>
+        <li><a href="#map_page" data-icon="search">Mapa</a></li>
+        <li><a href="#profile_page" data-icon="gear">Ajustes</a></li>
+        <li><a href="#initial_page" onclick="logout()" data-icon="delete">Logout</a></li>
+      </ul>
+    </div><!-- /navbar -->
+  </div><!-- /footer -->
+</div>
+
+<div data-role="page" id="need_page">
+  <div data-role="header">
+    <h1>Matches del Need {sdfsdfsdf}</h1>
+  </div><!-- /header -->
+
+  <div data-role="content">
+    <div class="alert alert-success">
+      <a class="close" data-dismiss="alert">&times;</a>
+      <strong>!</strong> <span class="mensaje">Nuevo Need</span>
+    </div>
+    <br />
+    <ul data-role="listview" id="lista_matches">
+    </ul>
+    <br />  
+    <br />
+    <a href="#list_page" data-transition="turn" data-role="button" data-icon="star" data-theme="e">Atr&aacute;s</a>
+  </div><!-- /content -->
+  <div data-role="footer" data-position="fixed" data-id="navbar">
+    <div data-role="navbar">
+      <ul>
+        <li><a href="#list_page" data-icon="home">Mis Needs</a></li>
+        <li><a href="#map_page" data-icon="search">Mapa</a></li>
+        <li><a href="#profile_page" data-icon="gear">Ajustes</a></li>
+        <li><a href="#initial_page" onclick="logout()" data-icon="delete">Logout</a></li>
+      </ul>
+    </div><!-- /navbar -->
+  </div><!-- /footer -->
+</div>
+
+<div data-role="page" id="map_page">
+  <div data-role="header">
+    <h1>Map</h1>
+  </div><!-- /header -->
+
+  <div data-role="content"> 
+    <p>Map</p>
+    <div id="map_canvas" style="width:250px;height:250px"></div>
+    <a href="#initial_page" data-transition="turn" data-role="button" data-icon="star" data-theme="c" data-direction="reverse">atras</a>  
+  </div><!-- /content -->
+  <div data-role="footer" data-position="fixed" data-id="navbar">
+    <div data-role="navbar">
+      <ul>
+        <li><a href="#list_page" data-icon="star">My List</a></li>
+        <li><a href="#map_page" data-icon="search">Map</a></li>
+        <li><a href="#profile_page" data-icon="home">Profile</a></li>
+        <li><a href="#messages_page" data-icon="home">Messages</a></li>
+      </ul>
+    </div><!-- /navbar -->
+  </div><!-- /footer -->
+</div>
+
+<div data-role="page" id="profile_page">
+  <div data-role="header">
+    <h1>Profile</h1>
+  </div><!-- /header -->
+
+  <div data-role="content"> 
+    <p>Profile</p>  
+    <a href="#initial_page" data-transition="turn" data-role="button" data-icon="star" data-theme="c" data-direction="reverse">atras</a>
+  </div><!-- /content -->
+  <div data-role="footer" data-position="fixed" data-id="navbar">
+    <div data-role="navbar">
+      <ul>
+        <li><a href="#list_page" data-icon="star">My List</a></li>
+        <li><a href="#map_page" data-icon="search">Map</a></li>
+        <li><a href="#profile_page" data-icon="home">Profile</a></li>
+        <li><a href="#messages_page" data-icon="home">Messages</a></li>
+      </ul>
+    </div><!-- /navbar -->
+  </div><!-- /footer -->
+</div>
+
+<script src="{% static 'js/app.js' %}"></script>
+
+</body>
+</html>
